@@ -1,4 +1,17 @@
 ================================================================================                            
+                                 NOTICE
+            This application has been slightly modified for use
+================================================================================
+Some changes made: Points to the admin port for 5048 and deployment port at 5080
+as the Payara 4.1.153 domain I use has the portbase 5000.
+
+Some of the original tests were written for wrong data and those have been 
+amended. I'm writing a series of integration tests using a full maven @Deployment
+method to test user interaction functionality with HtmlUnit being the web browser
+in an Arquillian testrunner.
+
+
+================================================================================                            
                               Cargo Tracker
             Applied Domain-Driven Design Blue Prints for Java EE
 ================================================================================
