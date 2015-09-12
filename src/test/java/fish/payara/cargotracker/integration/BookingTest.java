@@ -32,6 +32,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.archive.importer.MavenImporter;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -44,83 +45,21 @@ import java.util.logging.Logger;
 /**
  * @author Fraser Savage
  * This test class is used to automate testing that books a new cargo journey, views the details and itinerary and changes the destination.
- * TODO Fix the routing functionality so that a test to change routing can be performed.
  */
 @RunWith(Arquillian.class)
 public class BookingTest {
     private static final Logger log = Logger.getLogger(BookingTest.class.getCanonicalName());
     private static String newCargoId;
 
+    /**
+     * Deploys the war to the application server.
+     * @return
+     */
     @Deployment
     public static WebArchive createDeployment() {
-        WebArchive war = ShrinkWrap
-                .create(WebArchive.class, "cargo-tracker-test.war")
-                        // Application layer component directly under test.
-                .addClass(BookingService.class)
-                        // Domain layer components.
-                .addClass(TrackingId.class)
-                .addClass(UnLocode.class)
-                .addClass(Itinerary.class)
-                .addClass(Leg.class)
-                .addClass(Voyage.class)
-                .addClass(VoyageNumber.class)
-                .addClass(Schedule.class)
-                .addClass(CarrierMovement.class)
-                .addClass(Location.class)
-                .addClass(HandlingEvent.class)
-                .addClass(Cargo.class)
-                .addClass(RouteSpecification.class)
-                .addClass(AbstractSpecification.class)
-                .addClass(Specification.class)
-                .addClass(AndSpecification.class)
-                .addClass(OrSpecification.class)
-                .addClass(NotSpecification.class)
-                .addClass(Delivery.class)
-                .addClass(TransportStatus.class)
-                .addClass(HandlingActivity.class)
-                .addClass(RoutingStatus.class)
-                .addClass(HandlingHistory.class)
-                .addClass(DomainObjectUtils.class)
-                .addClass(CargoRepository.class)
-                .addClass(LocationRepository.class)
-                .addClass(VoyageRepository.class)
-                .addClass(HandlingEventRepository.class)
-                .addClass(HandlingEventFactory.class)
-                .addClass(CannotCreateHandlingEventException.class)
-                .addClass(UnknownCargoException.class)
-                .addClass(UnknownVoyageException.class)
-                .addClass(UnknownLocationException.class)
-                .addClass(RoutingService.class)
-                        // Application layer components
-                .addClass(DefaultBookingService.class)
-                        // Infrastructure layer components.
-                .addClass(JpaCargoRepository.class)
-                .addClass(JpaVoyageRepository.class)
-                .addClass(JpaHandlingEventRepository.class)
-                .addClass(JpaLocationRepository.class)
-                .addClass(ExternalRoutingService.class)
-                .addClass(JsonMoxyConfigurationContextResolver.class)
-                        // Interface components
-                .addClass(TransitPath.class)
-                .addClass(TransitEdge.class)
-                        // Third-party system simulator
-                .addClass(GraphTraversalService.class)
-                .addClass(GraphDao.class)
-                        // Sample data.
-                .addClass(BookingServiceTestDataGenerator.class)
-                .addClass(SampleLocations.class)
-                .addClass(SampleVoyages.class)
-                .addClass(DateUtil.class)
-                .addClass(BookingServiceTestRestConfiguration.class)
-                .addAsResource("META-INF/persistence.xml",
-                        "META-INF/persistence.xml")
-                .addAsWebInfResource("test-web.xml", "web.xml")
-                .addAsWebInfResource("test-ejb-jar.xml", "ejb-jar.xml")
-                .addAsLibraries(
-                        Maven.resolver().loadPomFromFile("pom.xml")
-                                .resolve("org.apache.commons:commons-lang3")
-                                .withTransitivity().asFile());
-
+        WebArchive war = ShrinkWrap.create(MavenImporter.class)
+                .loadPomFromFile("pom.xml").importBuildOutput().as(WebArchive.class);
+        System.out.println(war.toString(true));
         return war;
     }
 
@@ -130,6 +69,7 @@ public class BookingTest {
     @Rule
     public TestName testName = new TestName();
 
+    // TODO Create test to book new cargo through admin interface.
     @Test
     @RunAsClient
     @InSequence(1)
@@ -138,6 +78,7 @@ public class BookingTest {
         log.log(Level.INFO, "Successfully booked new cargo with Id \"" + newCargoId + "\".");
     }
 
+    // TODO Create test to track new cargo through public interface.
     @Test
     @RunAsClient
     @InSequence(2)
@@ -145,6 +86,7 @@ public class BookingTest {
         log.log(Level.INFO, "Starting automated test to track new cargo with Id \"" + newCargoId + "\" through public interface.");
     }
 
+    // TODO Create test to track new cargo through admin interface.
     @Test
     @RunAsClient
     @InSequence(3)
@@ -152,6 +94,7 @@ public class BookingTest {
         log.log(Level.INFO, "Starting automated test to track new cargo with Id \"" + newCargoId + "\" through admin interface.");
     }
 
+    // TODO Create test to view details of new cargo through the admin interface.
     @Test
     @RunAsClient
     @InSequence(4)
@@ -159,6 +102,7 @@ public class BookingTest {
         log.log(Level.INFO, "Starting automated test to view details for new cargo with Id \"" + newCargoId + "\" through admin interface.");
     }
 
+    // TODO Create test to change the destination of the new cargo through the admin interface.
     @Test
     @RunAsClient
     @InSequence(5)

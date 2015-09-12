@@ -63,123 +63,14 @@ public class ChangeEndTest {
 
     private static final String changeLink = "Change destination";
 
+    /**
+     * Deploys the war to the application server.
+     * @return
+     */
     @Deployment
     public static WebArchive createDeployment() {
         WebArchive war = ShrinkWrap.create(MavenImporter.class)
                 .loadPomFromFile("pom.xml").importBuildOutput().as(WebArchive.class);
-                /*
-                ShrinkWrap
-                .create(WebArchive.class)
-                        /*
-                        // Application layer components.
-                .addClasses(BookingService.class,
-                        ApplicationEvents.class,
-                        CargoInspectionService.class,
-                        HandlingEventService.class,
-                        DefaultBookingService.class,
-                        DefaultCargoInspectionService.class,
-                        DefaultHandlingEventService.class)
-                        // Domain layer components.
-                .addClass(TrackingId.class)
-                .addClass(UnLocode.class)
-                .addClass(Itinerary.class)
-                .addClass(Leg.class)
-                .addClass(Voyage.class)
-                .addClass(VoyageNumber.class)
-                .addClass(Schedule.class)
-                .addClass(CarrierMovement.class)
-                .addClass(Location.class)
-                .addClass(HandlingEvent.class)
-                .addClass(Cargo.class)
-                .addClass(RouteSpecification.class)
-                .addClass(AbstractSpecification.class)
-                .addClass(Specification.class)
-                .addClass(AndSpecification.class)
-                .addClass(OrSpecification.class)
-                .addClass(NotSpecification.class)
-                .addClass(Delivery.class)
-                .addClass(TransportStatus.class)
-                .addClass(HandlingActivity.class)
-                .addClass(RoutingStatus.class)
-                .addClass(HandlingHistory.class)
-                .addClass(DomainObjectUtils.class)
-                .addClass(CargoRepository.class)
-                .addClass(LocationRepository.class)
-                .addClass(VoyageRepository.class)
-                .addClass(HandlingEventRepository.class)
-                .addClass(HandlingEventFactory.class)
-                .addClass(CannotCreateHandlingEventException.class)
-                .addClass(UnknownCargoException.class)
-                .addClass(UnknownVoyageException.class)
-                .addClass(UnknownLocationException.class)
-                .addClass(RoutingService.class)
-                        // Application layer components
-                .addClass(DefaultBookingService.class)
-                        // Infrastructure layer components.
-                .addClass(JpaCargoRepository.class)
-                .addClass(JpaVoyageRepository.class)
-                .addClass(JpaHandlingEventRepository.class)
-                .addClass(JpaLocationRepository.class)
-                .addClass(ExternalRoutingService.class)
-                .addClass(JsonMoxyConfigurationContextResolver.class)
-                        // Interface components
-                .addClass(TransitPath.class)
-                .addClass(TransitEdge.class)
-                        // Third-party system simulator
-                .addClass(GraphTraversalService.class)
-                .addClass(GraphDao.class)
-                        // Sample data.
-                .addClass(BookingServiceTestDataGenerator.class)
-                .addClass(SampleLocations.class)
-                .addClass(SampleVoyages.class)
-                .addClass(DateUtil.class)
-                .addClass(BookingServiceTestRestConfiguration.class);
-
-                .addPackage("net.java.cargotracker.application")
-                .addPackage("net.java.cargotracker.application.internal")
-                .addPackage("net.java.cargotracker.application.util")
-                .addPackage("net.java.cargotracker.domain.model.cargo")
-                .addPackage("net.java.cargotracker.domain.model.handling")
-                .addPackage("net.java.cargotracker.domain.model.location")
-                .addPackage("net.java.cargotracker.domain.model.voyage")
-                .addPackage("net.java.cargotracker.domain.service")
-                .addPackage("net.java.cargotracker.domain.shared")
-                .addPackage("net.java.cargotracker.infrastructure.events.cdi")
-                .addPackage("net.java.cargotracker.infrastructure.messaging.jms")
-                .addPackage("net.java.cargotracker.infrastructure.persistence.jpa")
-                .addPackage("net.java.cargotracker.infrastructure.routing")
-                .addPackage("net.java.cargotracker.interfaces.booking.facade")
-                .addPackage("net.java.cargotracker.interfaces.booking.facade.dto")
-                .addPackage("net.java.cargotracker.interfaces.booking.facade.internal")
-                .addPackage("net.java.cargotracker.interfaces.booking.facade.internal.assembler")
-                .addPackage("net.java.cargotracker.interfaces.booking.rest")
-                .addPackage("net.java.cargotracker.interfaces.booking.socket")
-                .addPackage("net.java.cargotracker.interfaces.booking.web")
-                .addPackage("net.java.cargotracker.interfaces.handling")
-                .addPackage("net.java.cargotracker.interfaces.handling.file")
-                .addPackage("net.java.cargotracker.interfaces.handling.rest")
-                .addPackage("net.java.cargotracker.interfaces.tracking.web")
-                .addPackage("net.java.pathfinder");
-                // Merges in the files needed from the webapp source for integration testing.
-                war.merge(ShrinkWrap.create(GenericArchive.class)
-                        .as(ExplodedImporter.class)
-                        .importDirectory(webapp_src)
-                        .as(GenericArchive.class), "/", Filters.exclude("ejb-jar.xml"))
-                // Resources
-                .addAsResource("META-INF/batch-jobs/EventFilesProcessorJob.xml",
-                        "META-INF/batch-jobs/EventFilesProcessorJob.xml")
-                .addAsResource("net/java/cargotracker/messages.properties",
-                        "net/java/cargotracker/messages.properties")
-                .addAsResource("META-INF/persistence.xml",
-                        "META-INF/persistence.xml")
-                .addAsWebInfResource("test-web.xml", "web.xml")
-                //.addAsWebInfResource("test-ejb-jar.xml", "ejb-jar.xml")
-                .addAsLibraries(
-                        Maven.resolver().loadPomFromFile("pom.xml")
-                                .resolve("org.apache.commons:commons-lang3")
-                                .withTransitivity().asFile());
-                */
-
         System.out.println(war.toString(true));
         return war;
     }
@@ -194,6 +85,9 @@ public class ChangeEndTest {
 
     private HtmlPage landingPageResponse;
 
+    /**
+     * Set up method that runs before each test to create a new web client and load the application at its landing page.
+     */
     @Before
     @RunAsClient
     public void setUp() {
@@ -207,6 +101,9 @@ public class ChangeEndTest {
         }
     }
 
+    /**
+     * Tests that the destination can be changed for cargo with tracking Id ABC123
+     */
     @Test
     @RunAsClient
     public void testChangeEndId1() {
@@ -231,6 +128,9 @@ public class ChangeEndTest {
         }
     }
 
+    /**
+     * Tests that the destination can be changed for cargo with tracking Id JKL567
+     */
     @Test
     @RunAsClient
     public void testChangeEndId2() {
@@ -255,6 +155,9 @@ public class ChangeEndTest {
         }
     }
 
+    /**
+     * Tests that the destination can be changed for cargo with tracking Id MNO456
+     */
     @Test
     @RunAsClient
     public void testChangeEndId3() {
@@ -279,6 +182,9 @@ public class ChangeEndTest {
         }
     }
 
+    /**
+     * Tests that the destination can be changed for cargo with tracking Id DEF789
+     */
     @Test
     @RunAsClient
     public void testChangeEndId4() {
