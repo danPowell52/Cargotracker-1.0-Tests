@@ -2,41 +2,13 @@ package fish.payara.cargotracker.integration;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import net.java.cargotracker.application.*;
-import net.java.cargotracker.application.internal.DefaultBookingService;
-import net.java.cargotracker.application.internal.DefaultCargoInspectionService;
-import net.java.cargotracker.application.internal.DefaultHandlingEventService;
-import net.java.cargotracker.application.util.DateUtil;
-import net.java.cargotracker.application.util.JsonMoxyConfigurationContextResolver;
-import net.java.cargotracker.domain.model.cargo.*;
-import net.java.cargotracker.domain.model.handling.*;
-import net.java.cargotracker.domain.model.location.Location;
-import net.java.cargotracker.domain.model.location.LocationRepository;
-import net.java.cargotracker.domain.model.location.SampleLocations;
-import net.java.cargotracker.domain.model.location.UnLocode;
-import net.java.cargotracker.domain.model.voyage.*;
-import net.java.cargotracker.domain.service.RoutingService;
-import net.java.cargotracker.domain.shared.*;
-import net.java.cargotracker.infrastructure.persistence.jpa.JpaCargoRepository;
-import net.java.cargotracker.infrastructure.persistence.jpa.JpaHandlingEventRepository;
-import net.java.cargotracker.infrastructure.persistence.jpa.JpaLocationRepository;
-import net.java.cargotracker.infrastructure.persistence.jpa.JpaVoyageRepository;
-import net.java.cargotracker.infrastructure.routing.ExternalRoutingService;
-import net.java.pathfinder.api.GraphTraversalService;
-import net.java.pathfinder.api.TransitEdge;
-import net.java.pathfinder.api.TransitPath;
-import net.java.pathfinder.internal.GraphDao;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.Filters;
-import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.archive.importer.MavenImporter;
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,7 +16,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
-import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -117,9 +88,9 @@ public class TrackExistingTest {
             enterCargoIdPage.getElementById("trackingForm:trackingIdInput").setAttribute("value", trackingId1);
             System.out.println(enterCargoIdPage.getElementById("trackingForm:trackingIdInput").getAttribute("value"));
             HtmlPage trackingPage = enterCargoIdPage.getElementById("trackingForm:submitTrack").click();
-            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hong Kong, at 03/01/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hong Kong, at 03/02/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM GMT"));
+            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hong Kong, at 03/01/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hong Kong, at 03/02/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM PST"));
         } catch (IOException ex) {
             Assert.fail("An IOException was thrown during the test for class \"" + TrackExistingTest.class.getSimpleName() + "\" at method \"" + testName.getMethodName() + "\" with message: " + ex.getMessage());
         }
@@ -141,10 +112,10 @@ public class TrackExistingTest {
             System.out.println(enterCargoIdPage.getElementById("trackingForm:trackingIdInput").getAttribute("value"));
             HtmlPage trackingPage = enterCargoIdPage.getElementById("trackingForm:submitTrack").click();
             Assert.assertTrue("Tracker did not contain expected misdirection notice.", trackingPage.asText().contains("Cargo is misdirected"));
-            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hangzhou, at 03/01/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hangzhou, at 03/03/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected fourth event.", trackingPage.asText().contains("Loaded onto voyage 0100S in New York, at 03/06/2014 12:00 AM GMT"));
+            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hangzhou, at 03/01/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hangzhou, at 03/03/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected fourth event.", trackingPage.asText().contains("Loaded onto voyage 0100S in New York, at 03/06/2014 12:00 AM PST"));
         } catch (IOException ex) {
             Assert.fail("An IOException was thrown during the test for class \"" + TrackExistingTest.class.getSimpleName() + "\" at method \"" + testName.getMethodName() + "\" with message: " + ex.getMessage());
         }
@@ -167,9 +138,9 @@ public class TrackExistingTest {
             System.out.println(enterCargoIdPage.getElementById("trackingForm:trackingIdInput").getAttribute("value"));
             HtmlPage trackingPage = enterCargoIdPage.getElementById("trackingForm:submitTrack").click();
             Assert.assertTrue("Tracker did not contain expected next activity.", trackingPage.asText().contains("Next expected activity is to load cargo onto voyage 0200T in New York"));
-            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hong Kong, at 03/01/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hong Kong, at 03/02/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM GMT"));
+            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hong Kong, at 03/01/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hong Kong, at 03/02/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM PST"));
         } catch (IOException ex) {
             Assert.fail("An IOException was thrown during the test for class \"" + TrackExistingTest.class.getSimpleName() + "\" at method \"" + testName.getMethodName() + "\" with message: " + ex.getMessage());        }
     }
@@ -191,10 +162,10 @@ public class TrackExistingTest {
             System.out.println(enterCargoIdPage.getElementById("trackingForm:trackingIdInput").getAttribute("value"));
             HtmlPage trackingPage = enterCargoIdPage.getElementById("trackingForm:submitTrack").click();
             Assert.assertTrue("Tracker did not contain expected misdirection notice.", trackingPage.asText().contains("Cargo is misdirected"));
-            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hangzhou, at 03/01/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hangzhou, at 03/03/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM GMT"));
-            Assert.assertTrue("Handling history did not show expected fourth event.", trackingPage.asText().contains("Loaded onto voyage 0100S in New York, at 03/06/2014 12:00 AM GMT"));
+            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hangzhou, at 03/01/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected second event.", trackingPage.asText().contains("Loaded onto voyage 0100S in Hangzhou, at 03/03/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected third event.", trackingPage.asText().contains("Unloaded off voyage 0100S in New York, at 03/05/2014 12:00 AM PST"));
+            Assert.assertTrue("Handling history did not show expected fourth event.", trackingPage.asText().contains("Loaded onto voyage 0100S in New York, at 03/06/2014 12:00 AM PST"));
         } catch (IOException ex) {
             Assert.fail("An IOException was thrown during the test for class \"" + TrackExistingTest.class.getSimpleName() + "\" at method \"" + testName.getMethodName() + "\" with message: " + ex.getMessage());        }
     }

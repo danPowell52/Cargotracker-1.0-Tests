@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#set path variables
+home=$(pwd)
+original=$home/src/test/java/fish/payara/cargotracker/integration/
+source=$home/target/test-source/
+ASADMIN=/home/user/gitRepo/Payara/appserver/distributions/payara/target/stage/payara41/bin/asadmin
+testclasses=$home/target/test-classes/fish/payara/cargotracker/integration/
+nettestclasses=$home/target/test-classes/net/java/cargotracker/application/
+
+
+#Move the source into test files
+mv $home/src/test/java/net/java/cargotracker/application/* /home/user/gitRepo/Cargotracker-1.0-Tests/target/net-source/
+
+mv $home/src/test/java/fish/payara/cargotracker/integration/* /home/user/gitRepo/Cargotracker-1.0-Tests/target/test-source/
+
+#test each file individually
+for file in $source*
+do
+$ASADMIN stop-domain domain2
+$ASADMIN start-domain domain2
+$ASADMIN stop-domain
+$ASADMIN stop-database
+$ASADMIN start-domain
+$ASADMIN start-database
+
+
+mv $file $original
+cd $home
+read -p "Press [Enter] key to start backup..."
+mvn test
+read -p "Press [Enter] key to start backup..."
+cd $original
+mv $original* $source
+rm $testclasses*
+read -p "Press [Enter] key to start backup..."
+done
+
+$ASADMIN stop-domain domain2
+$ASADMIN start-domain domain2
+$ASADMIN stop-domain
+$ASADMIN stop-database
+$ASADMIN start-domain
+$ASADMIN start-database
+cd $home
+mv /home/user/gitRepo/Cargotracker-1.0-Tests/target/net-source/* $home/src/test/java/net/java/cargotracker/application/
+mvn test 
+
+
+#Move everything back
+mv $home/target/net-source/* /home/user/gitRepo/Cargotracker-1.0-Tests/src/test/java/net/java/cargotracker/application/
+mv $home/target/test-source/* /home/user/gitRepo/Cargotracker-1.0-Tests/src/test/java/fish/payara/cargotracker/integration/
+rm $testclasses*
+rm $nettestclasses*

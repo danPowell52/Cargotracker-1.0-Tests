@@ -1,0 +1,13 @@
+#!/bin/bash
+
+#set path variables
+home=$(pwd)
+original=$home/src/test/java/fish/payara/cargotracker/integration/
+source=$home/target/test-source/
+
+for file in $source*
+echo "helloes"
+done
+
+echo "DONE"
+echo "DONE"

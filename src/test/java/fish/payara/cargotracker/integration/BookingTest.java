@@ -1,9 +1,5 @@
 package fish.payara.cargotracker.integration;
 
-import net.java.cargotracker.application.BookingService;
-import net.java.cargotracker.application.BookingServiceTestDataGenerator;
-import net.java.cargotracker.application.BookingServiceTestRestConfiguration;
-import net.java.cargotracker.application.internal.DefaultBookingService;
 import net.java.cargotracker.application.util.DateUtil;
 import net.java.cargotracker.application.util.JsonMoxyConfigurationContextResolver;
 import net.java.cargotracker.domain.model.cargo.*;
