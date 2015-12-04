@@ -1,22 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: fish.payara.cargotracker.integration.TrackExistingTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 3, Errors: 0, Skipped: 0, Time elapsed: 30.24 sec <<< FAILURE! - in fish.payara.cargotracker.integration.TrackExistingTest
-testPublicTrackingId2(fish.payara.cargotracker.integration.TrackExistingTest)  Time elapsed: 1.45 sec  <<< FAILURE!
-java.lang.AssertionError: Handling history did not show expected first event.
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.assertTrue(Assert.java:41)
-	at fish.payara.cargotracker.integration.TrackExistingTest.testPublicTrackingId2(TrackExistingTest.java:144)
-
-testAdminTrackingId1(fish.payara.cargotracker.integration.TrackExistingTest)  Time elapsed: 1.648 sec  <<< FAILURE!
-java.lang.AssertionError: Handling history did not show expected first event.
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.assertTrue(Assert.java:41)
-	at fish.payara.cargotracker.integration.TrackExistingTest.testAdminTrackingId1(TrackExistingTest.java:170)
-
-testAdminTrackingId2(fish.payara.cargotracker.integration.TrackExistingTest)  Time elapsed: 1.554 sec  <<< FAILURE!
-java.lang.AssertionError: Handling history did not show expected first event.
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.assertTrue(Assert.java:41)
-	at fish.payara.cargotracker.integration.TrackExistingTest.testAdminTrackingId2(TrackExistingTest.java:194)
-
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 32.071 sec - in fish.payara.cargotracker.integration.TrackExistingTest

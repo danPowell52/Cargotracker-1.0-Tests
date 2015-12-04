@@ -40,7 +40,7 @@ $ASADMIN stop-domain domain2
 $ASADMIN start-domain domain2
 $ASADMIN stop-domain
 $ASADMIN stop-database
-$ASADMIN start-domain
+$ASADMIN start-domain --debug
 $ASADMIN start-database
 cd $home
 mv /home/user/gitRepo/Cargotracker-1.0-Tests/target/net-source/* $home/src/test/java/net/java/cargotracker/application/

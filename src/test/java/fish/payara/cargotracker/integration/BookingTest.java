@@ -1,5 +1,13 @@
 package fish.payara.cargotracker.integration;
 
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlDateInput;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.html.HtmlOption;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSelect;
+import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
+import java.io.IOException;
 import net.java.cargotracker.application.util.DateUtil;
 import net.java.cargotracker.application.util.JsonMoxyConfigurationContextResolver;
 import net.java.cargotracker.domain.model.cargo.*;
@@ -35,8 +43,12 @@ import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.hamcrest.CoreMatchers.is;
+import org.junit.Assert;
+import org.junit.Before;
 
 /**
  * @author Fraser Savage
@@ -65,12 +77,52 @@ public class BookingTest {
     @Rule
     public TestName testName = new TestName();
 
+    private WebClient browser;
+
+    private HtmlPage landingPageResponse;
+
+    @Before
+    @RunAsClient
+    public void setUp() {
+        try {
+            browser = new WebClient();
+            browser.getOptions().setThrowExceptionOnScriptError(false);
+            landingPageResponse = browser.getPage(deploymentUrl.toString() + "index.xhtml");
+            Assert.assertEquals("Could not load the application landing page.", "Cargo Tracker", landingPageResponse.getTitleText());
+        } catch (IOException ex) {
+            Assert.fail("An IOException was thrown during the test setup for class \"" + BookingTest.class.getSimpleName() + "\" at method \"" + testName.getMethodName() + "\" with message: " + ex.getMessage());
+        }
+    }
+    
     // TODO Create test to book new cargo through admin interface.
     @Test
     @RunAsClient
     @InSequence(1)
     public void testBookNewCargo() {
         log.log(Level.INFO, "Starting automated testing to book new cargo.");
+        try {
+            HtmlPage admin = landingPageResponse.getElementById("adminLandingLink").click();
+            Assert.assertThat("Page title was not as expected for the admin dashboard. Expected \"Cargo Dashboard\" but actual was \"" + admin.getTitleText() + "\"." , admin.getTitleText(), is("Cargo Dashboard"));
+            HtmlPage makeBooking = admin.getElementById("adminBooking").click();
+            Assert.assertThat("Page title was not as expected for the admin dashboard. Expected \"Cargo Administration\" but actual was \"" + makeBooking.getTitleText() + "\"." , makeBooking.getTitleText(), is("Cargo Administration"));
+            HtmlSelect getDestinations = makeBooking.getElementByName("registrationForm:j_idt17");
+            HtmlOption selectDestination = getDestinations.getOptionByText("Tokyo (JNTKO)");
+            getDestinations.setSelectedAttribute(selectDestination, true);
+            HtmlDateInput dateInput = makeBooking.getElementByName("registrationForm:j_idt20");
+            dateInput.setValueAttribute("2028-06-06");
+            HtmlPage confirmationPage = makeBooking.getElementByName("registrationForm:j_idt22").click();
+            Assert.assertTrue("", confirmationPage.asText().contains("Chicago (USCHI)") );
+            Assert.assertTrue("", confirmationPage.asText().contains("Tokyo (JNTKO)") );
+            List<?> getID = confirmationPage.getByXPath("//span[@class='success label']/text()");
+            Object cargoIDPhrase = getID.get(0);
+            String [] fragments = cargoIDPhrase.toString().split(" ");
+            newCargoId = fragments[3];
+        }
+        catch(IOException ie) {
+            Assert.fail("An IOException was thrown during the test for class \"" + BookingTest.class.getSimpleName() + "\" at method \"" + testName.getMethodName() + "\" with message: " + ie.getMessage());
+
+        }
+            
         log.log(Level.INFO, "Successfully booked new cargo with Id \"" + newCargoId + "\".");
     }
 
@@ -80,6 +132,18 @@ public class BookingTest {
     @InSequence(2)
     public void testPublicTrackNewCargo() {
         log.log(Level.INFO, "Starting automated test to track new cargo with Id \"" + newCargoId + "\" through public interface.");
+        log.log(Level.INFO, "Starting automated test to track Id \"" + newCargoId + "\" through public interface.");
+        try {
+            System.out.println(landingPageResponse.getUrl());
+            HtmlPage enterCargoIdPage = landingPageResponse.getElementById("publicLandingLink").click();
+            enterCargoIdPage.getElementById("trackingForm:trackingIdInput").setAttribute("value", newCargoId);
+            System.out.println(enterCargoIdPage.getElementById("trackingForm:trackingIdInput").getAttribute("value"));
+            HtmlPage trackingPage = enterCargoIdPage.getElementById("trackingForm:submitTrack").click();
+            Assert.assertTrue("Handling history did not show expected first event.", trackingPage.asText().contains("Received in Hong Kong, at 03/01/2014 12:00 AM PST"));
+        } catch (IOException ex) {
+            Assert.fail("An IOException was thrown during the test for class \"" + BookingTest.class.getSimpleName() + "\" at method \"" + testName.getMethodName() + "\" with message: " + ex.getMessage());
+        }
+    
     }
 
     // TODO Create test to track new cargo through admin interface.

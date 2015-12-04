@@ -45,7 +45,7 @@ $ASADMIN start-database
 cd $home
 mv /home/user/gitRepo/Cargotracker-1.0-Tests/target/net-source/* $home/src/test/java/net/java/cargotracker/application/
 mvn test 
-rm $nettestclasses*
+
 
 #Move everything back
 mv $home/target/net-source/* /home/user/gitRepo/Cargotracker-1.0-Tests/src/test/java/net/java/cargotracker/application/
