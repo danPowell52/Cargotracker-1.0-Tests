@@ -27,21 +27,21 @@ $ASADMIN start-database
 
 mv $file $original
 cd $home
-read -p "Press [Enter] key to start backup..."
+#read -p "Press [Enter] key to start backup..."
 mvn test
-read -p "Press [Enter] key to start backup..."
+#read -p "Press [Enter] key to start backup..."
 cd $original
 mv $original* $source
 rm $testclasses*
-read -p "Press [Enter] key to start backup..."
+#read -p "Press [Enter] key to start backup..."
 done
 
-$ASADMIN stop-domain domain2
-$ASADMIN start-domain domain2
+#$ASADMIN stop-domain domain2
+#$ASADMIN start-domain domain2
 $ASADMIN stop-domain
-$ASADMIN stop-database
-$ASADMIN start-domain
-$ASADMIN start-database
+#$ASADMIN stop-database
+$ASADMIN start-domain --debug
+#$ASADMIN start-database
 cd $home
 mv /home/user/gitRepo/Cargotracker-1.0-Tests/target/net-source/* $home/src/test/java/net/java/cargotracker/application/
 mvn test 

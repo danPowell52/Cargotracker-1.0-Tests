@@ -9,7 +9,7 @@
     <container qualifier="glassfish" default="true">
         <configuration>
             <!-- <property name="outputToConsole">true</property> -->
-            <property name="remoteServerAdminPort">4848</property>
+            <property name="remoteServerAdminPort">5048</property>
         </configuration>
     </container>     
 </arquillian>
